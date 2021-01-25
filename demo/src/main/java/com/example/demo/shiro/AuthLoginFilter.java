@@ -1,4 +1,4 @@
-package com.shiro;
+package com.example.demo.shiro;
 
 import com.alibaba.fastjson.JSONObject;
 import com.result.JsonResult;

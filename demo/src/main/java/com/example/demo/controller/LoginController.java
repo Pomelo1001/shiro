@@ -1,8 +1,8 @@
-package com.controller;
+package com.example.demo.controller;
 
 import com.entity.User;
 import com.result.JsonResult;
-import com.service.LoginService;
+import com.example.demo.service.LoginService;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;

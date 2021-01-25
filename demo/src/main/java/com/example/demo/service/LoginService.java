@@ -1,4 +1,4 @@
-package com.service;
+package com.example.demo.service;
 
 import com.entity.User;
 import org.apache.shiro.SecurityUtils;

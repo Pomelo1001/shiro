@@ -1,9 +1,9 @@
-package com.config;
+package com.example.demo.config;
 
-import com.shiro.RedisSessionDao;
-import com.shiro.AuthLoginFilter;
-import com.shiro.MySessionManager;
-import com.shiro.UserAuthorizingRealm;
+import com.example.demo.shiro.RedisSessionDao;
+import com.example.demo.shiro.AuthLoginFilter;
+import com.example.demo.shiro.MySessionManager;
+import com.example.demo.shiro.UserAuthorizingRealm;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;

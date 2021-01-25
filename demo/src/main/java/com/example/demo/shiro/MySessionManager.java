@@ -1,4 +1,4 @@
-package com.shiro;
+package com.example.demo.shiro;
 
 import com.common.IPUtils;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
