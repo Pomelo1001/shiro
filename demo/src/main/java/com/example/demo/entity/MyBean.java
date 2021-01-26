@@ -21,6 +21,7 @@ public class MyBean implements FactoryBean {
     public Object getObject() throws Exception {
         MyBean myBean = new MyBean();
         myBean.message = "通过FactoryBean.getObject()初始化实例";
+        // 这里并不一定要返回MyBean自身的实例，可以是其他任何对象的实例,仅仅是为了验证，getObject()是可以返回任何对象的实例的
         return myBean;
     }
 

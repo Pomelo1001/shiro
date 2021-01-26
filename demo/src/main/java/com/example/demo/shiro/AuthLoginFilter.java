@@ -15,7 +15,7 @@ import java.io.PrintWriter;
  * @version 1.1.0
  * @author：cp
  * @time：2021-1-25
- * @Description: todo
+ * @Description: 自定义登录过滤器
  */
 public class AuthLoginFilter extends AccessControlFilter {
     /**

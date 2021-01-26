@@ -14,10 +14,12 @@ import java.util.concurrent.TimeUnit;
  * @version 1.1.0
  * @author：cp
  * @time：2021-1-25
- * @Description: todo
+ * @Description: RedisSessionDao，以Redis持久化方式做Session共享，无需配置即可支持集群
  */
 public class RedisSessionDao extends AbstractSessionDAO {
-
+    /**
+     * Session超时时间（秒）
+     */
     private long expireTime;
 
     public RedisSessionDao(long expireTime) {

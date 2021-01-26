@@ -17,7 +17,8 @@ import java.io.Serializable;
  * @version 1.1.0
  * @author：cp
  * @time：2021-1-25
- * @Description: todo
+ * @Description: 自定义Session管理器，以Token做会话保持，同时兼容Cookie方式
+ *  * 默认从请求头中获取Token，获取不到会继续读取Cookie
  */
 public class MySessionManager extends DefaultWebSessionManager {
     private Logger log = LoggerFactory.getLogger(this.getClass());
