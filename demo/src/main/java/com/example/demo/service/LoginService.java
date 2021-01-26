@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.entity.User;
+import com.example.demo.entity.User;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -41,6 +41,6 @@ public class LoginService {
     }
 
     public User getUserByUsername(String username) {
-        return new User("zhangkuan", "zhangkuan");
+        return new User("cp", "123456");
     }
 }

@@ -1,7 +1,7 @@
 package com.example.demo.shiro;
 
 import com.alibaba.fastjson.JSONObject;
-import com.result.JsonResult;
+import com.example.demo.result.JsonResult;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.AccessControlFilter;

@@ -1,4 +1,4 @@
-package com.entity;
+package com.example.demo.entity;
 
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.stereotype.Component;

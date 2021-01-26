@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
 
-import com.entity.User;
-import com.exception.MyException;
-import com.result.JsonResult;
+import com.example.demo.entity.User;
+import com.example.demo.exception.MyException;
+import com.example.demo.result.JsonResult;
 import org.apache.log4j.Logger;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;

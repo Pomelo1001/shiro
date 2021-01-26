@@ -1,6 +1,6 @@
 package com.example.demo.shiro;
 
-import com.entity.User;
+import com.example.demo.entity.User;
 import com.example.demo.service.LoginService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
