@@ -56,7 +56,9 @@ LinkedHashMap是为了保持顺序，Filter的配置顺序不能随便打乱，�
 UserAuthorizingRealm extends AuthorizingRealm
 - doGetAuthorizationInfo
 - doGetAuthenticationInfo  
-这样配置完成以后，就可以基于URL做粗粒度的权限控制了，我们可以通过不同的过滤器为URL配置不同的权限。 
+这样配置完成以后，就可以基于URL做粗粒度的权限控制了，我们可以通过不同的过滤器为URL配置不同的权限。   
+#### 记住一点
+[Shiro不会去维护用户、维护权限；这些需要我们自己去设计/提供；然后通过相应的接口注入给Shiro即可。](https://www.iteye.com/blog/jinnianshilongnian-2018936)
 
 
 
