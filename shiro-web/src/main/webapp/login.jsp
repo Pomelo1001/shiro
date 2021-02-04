@@ -14,8 +14,8 @@
 </head>
 <body>
 <h6>这里是login.jsp</h6>
-<a href="<c:url value="http://www.baidu.com"/>">发送登录认证请求</a><br>
-<a href="<c:url value="/authen?username=jay&password=123456"/>">发送登录认证请求</a><br>
-<a href="<c:url value="/authen?username=jay&password=12"/>">模拟发送错误的帐号密码请求</a><br>
+<%--<a href="<c:url value="http://www.baidu.com"/>">发送登录认证请求</a><br>--%>
+<a href="<c:url value="/authen?username=pomelo&password=123456"/>">发送登录认证请求</a><br>
+<a href="<c:url value="/authen?username=pomelo&password=12"/>">模拟发送错误的帐号密码请求</a><br>
 </body>
 </html>
