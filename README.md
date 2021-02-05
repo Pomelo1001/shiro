@@ -60,5 +60,9 @@ UserAuthorizingRealm extends AuthorizingRealm
 #### 记住一点
 [Shiro不会去维护用户、维护权限；这些需要我们自己去设计/提供；然后通过相应的接口注入给Shiro即可。](https://www.iteye.com/blog/jinnianshilongnian-2018936)
 
+#### remember me功能
+    （1）当用户没有退出且关闭了浏览器，再次打开网站则不需要再次登录。
 
+    （2）当用户在登陆时勾选"记住我"，退出登录后，下次登录的时候，登录表单会记住上次的登录名。  
+    
 
