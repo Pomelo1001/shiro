@@ -51,4 +51,8 @@
     <!-- 导入shiro的配置文件 -->
     <import resource="shiro.xml"/>
 
+    <!-- 导入Redis配置文件-->
+    <import resource="redisContext.xml"/>
+
+
 </beans>

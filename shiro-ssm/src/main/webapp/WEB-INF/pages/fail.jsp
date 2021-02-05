@@ -12,6 +12,7 @@
     <title>登录失败</title>
 </head>
 <body>
-<a href="<c:url value="/WEB-INF/pages/login.jsp"/> ">重新登录</a>
+登录失败原因：${msg}
+<a href="<c:url value="/actions/login"/> ">重新登录</a>
 </body>
 </html>

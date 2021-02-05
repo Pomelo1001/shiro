@@ -2,6 +2,7 @@ package com.pomelo.controller;
 
 import com.pomelo.service.UserService;
 import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.ExcessiveAttemptsException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.servlet.Cookie;
@@ -14,7 +15,9 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.xml.registry.infomodel.User;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.apache.shiro.SecurityUtils.getSubject;
 
@@ -43,6 +46,7 @@ public class UserController {
         if (isRememberMe == null) {
             isRememberMe = false;
         }
+        request.getSession().setAttribute("abc", "def");
         //获取到Subject门面对象
         Subject subject = getSubject();
         UsernamePasswordToken usernamePasswordToken = new UsernamePasswordToken(userName, password);
@@ -53,22 +57,31 @@ public class UserController {
             //将用户数据交给Shiro框架去做
             //你可以在自定义Realm中的认证方法doGetAuthenticationInfo()处打个断点
             subject.login(usernamePasswordToken);
-            if (isRememberMe && userName.length() > 0){
+            if (isRememberMe && userName.length() > 0) {
                 //用于同一服务器内的cookie共享路径
                 rememberCookie.setPath("/");
                 rememberCookie.setMaxAge(Cookie.ONE_YEAR);
                 rememberCookie.setHttpOnly(true);
                 //存储用户名
                 rememberCookie.setValue(userName);
-                rememberCookie.saveTo(request,response);
-            }else {
+                rememberCookie.saveTo(request, response);
+            } else {
                 rememberCookie.setPath("/");
-                rememberCookie.removeFrom(request,response);
+                rememberCookie.removeFrom(request, response);
+            }
+        } catch (ExcessiveAttemptsException exception) {
+            if (!subject.isAuthenticated()) {
+                Map<String, String> failReason = new HashMap<>(1);
+                failReason.put("msg", "登录次数已经超过限制，请一分钟后重试");
+                //登录失败
+                return new ModelAndView("fail", failReason);
             }
         } catch (AuthenticationException exception) {
             if (!subject.isAuthenticated()) {
+                Map<String, String> failReason = new HashMap<>(1);
+                failReason.put("msg", "帐号密码错误");
                 //登录失败
-               return new ModelAndView("fail");
+                return new ModelAndView("fail", failReason);
             }
         }
         //登录成功
@@ -78,6 +91,7 @@ public class UserController {
 
     @RequestMapping(value = "admin")
     public String enterAdmin() {
+        System.out.println(getSubject().getSession().getAttribute("abc"));
         //跳转到 web-inf/pages/admin.jsp页面
         return "admin";
     }

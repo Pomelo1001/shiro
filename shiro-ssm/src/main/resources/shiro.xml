@@ -5,13 +5,35 @@
 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
 
     <!-- 自定义Realm -->
-    <bean id="userRealm" class="com.pomelo.shiro.UserRealm"/>
+    <bean id="userRealm" class="com.pomelo.shiro.UserRealm">
+        <property name="cachingEnabled" value="true"/>
+        <!-- 是否启用认证缓存 -->
+        <property name="authenticationCachingEnabled" value="true"/>
+        <!-- 开启后使用ehcache.xml中名为authenticationCache的缓存-->
+        <property name="authenticationCacheName" value="authenticationCache"/>
+        <!-- 是否启用授权缓存 -->
+        <property name="authorizationCachingEnabled" value="false"/>
+        <property name="authorizationCacheName" value="authorizationCache"/>
+
+        <!-- 为自定义Realm注入密码匹配器-->
+        <property name="credentialsMatcher" ref="userCredentialsMatcher"/>
+    </bean>
 
     <!-- securityManager 对象-->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <!-- 引入UserRealm -->
         <property name="realm" ref="userRealm"/>
+        <!-- remember me 管理器-->
         <property name="rememberMeManager" ref="rememberMeManager"/>
+        <!-- 会话管理器-->
+        <property name="sessionManager" ref="sessionManager"/>
+
+        <!-- 引入ehcache缓存 -->
+                <property name="cacheManager" ref="cacheManager"/>
+
+
+        <!-- 使用自定义的Redis作为缓存manager-->
+<!--        <property name="cacheManager" ref="redisCacheManager"/>-->
     </bean>
 
     <!-- 这个bean的id与web.xml中shiro相关配置保持一致 -->
@@ -67,5 +89,74 @@ http://www.springframework.org/schema/beans/spring-beans-4.0.xsd">
         <property name="cipherKey" value="#{T(org.apache.shiro.codec.Base64).
                                               decode('4AvVhmFLUs0KTA3Kprsdag==')}"/>
         <property name="cookie" ref="rememberMeCookie"/>
+    </bean>
+
+    <!-- 会话管理器 ,时间单位是毫秒-->
+    <bean id="sessionManager" class="org.apache.shiro.web.session.mgt.DefaultWebSessionManager">
+        <!--去掉URL中的JSESSIONID-->
+        <property name="sessionIdUrlRewritingEnabled" value="false"/>
+        <!-- 会话存活时间(毫秒) -->
+        <property name="globalSessionTimeout" value="200000"/><!-- 10分钟 -->
+        <!-- 是否删除无效的session-->
+        <property name="deleteInvalidSessions" value="true"/>
+        <!-- 扫描session线程,负责清理超时会话 -->
+        <property name="sessionValidationSchedulerEnabled" value="true"/>
+        <!-- 使用的是QuartZ组件来定时清理-->
+        <property name="sessionValidationScheduler" ref="sessionValidationScheduler"/>
+        <!-- session需要使用会话cookie模版-->
+        <property name="sessionIdCookieEnabled" value="true"/>
+        <property name="sessionIdCookie" ref="sessionIdCookie"/>
+        <!-- 对session进行增删错改查的实现类
+               ，如果不自己注入sessionDAO，defaultWebSessionManager会使用MemorySessionDAO用内存做为默认实现类-->
+        <!-- https://blog.csdn.net/lishehe/article/details/45223823 -->
+        <property name="sessionDAO" ref="sessionDAO"/>
+
+    </bean>
+
+
+    <!-- 会话验证调度器 ,时间单位是毫秒。使用的是Quartz定时任务-->
+    <bean id="sessionValidationScheduler" class="org.apache.shiro.session.mgt.quartz.QuartzSessionValidationScheduler">
+        <!-- 每5分钟进行一次扫描-->
+        <property name="sessionValidationInterval" value="300000"/>
+        <property name="sessionManager" ref="sessionManager"/>
+    </bean>
+
+    <!-- 会话 ID 生成器 -->
+    <bean id="sessionIdGenerator" class="org.apache.shiro.session.mgt.eis.JavaUuidSessionIdGenerator"/>
+
+    <!-- 会话读写实现类-->
+    <!--    <bean id="sessionDAO" class="org.apache.shiro.session.mgt.eis.EnterpriseCacheSessionDAO">
+            <property name="activeSessionsCacheName" value="shiro-activeSessionCache"/>
+            <property name="sessionIdGenerator" ref="sessionIdGenerator"/>
+        </bean>-->
+    <!-- 自定义session会话存储的实现类 ，使用Redis来存储共享session，达到分布式部署目的-->
+    <bean id="sessionDAO" class="com.pomelo.shiro.RedisSessionDao">
+        <property name="redisService" ref="redisService"/>
+        <!-- Session的过期时间，单位秒。session将存储在Redis集群中实现共享-->
+        <!-- Redis设置半小时的缓存失效时间 -->
+        <property name="expireSeconds" value="600000"/>
+    </bean>
+
+    <!-- shiro的自带 EhCache缓存管理器 -->
+    <bean id="cacheManager" class="org.apache.shiro.cache.ehcache.EhCacheManager">
+        <property name="cacheManagerConfigFile" value="classpath:ehcache.xml"/>
+    </bean>
+
+    <!-- 自定义redisManager-redis -->
+    <bean id="redisCacheManager" class="com.pomelo.shiro.cache.RedisCacheManager">
+        <property name="redisService" ref="redisService"/>
+        <!-- Cache的过期时间，单位秒 -->
+        <property name="expireSeconds" value="600"/>
+    </bean>
+
+    <!-- 凭证匹配器 -->
+    <bean id="userCredentialsMatcher" class="com.pomelo.shiro.RetryLimitCredentialsMatcher">
+        <!-- 为自定义Matcher注入缓存管理器-->
+        <constructor-arg ref="cacheManager"/>
+        <!-- 我们继承的HashedCredentialsMatcher类的构造函数中没有指明加密算法
+             因此我们得手动配置，使用md5循环加密一次即可-->
+        <property name="hashAlgorithmName" value="md5"/>
+        <property name="hashIterations" value="1"/>
+        <property name="storedCredentialsHexEncoded" value="true"/>
     </bean>
 </beans>
